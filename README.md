@@ -1,4 +1,7 @@
 # Species Distribution Model (SDM) Map
+[![View Interactive Mind Map](https://img.shields.io/badge/View-Interactive_Mind_Map-blue?style=for-the-badge)](https://junqi-fan.github.io/SDM-map/)
+> 👉 **[Click here to view the live, interactive Mind Map!](https://junqi-fan.github.io/SDM-map/)** 
+
 Welcome to the **SDM-map** repository! 
 The inspiration for this project came when I realized I needed to keep notes. Even though I had read many tutorials and papers on SDMs before, I found I couldn't remember every piece of advice when I actually needed to apply it. I want to sort out a comprehensive workflow and insert recommendations from other people's experiences at each step. I think a mind map is a good way to achieve this.
 The reasons I created this mind map using a Markdown file (thanks to [Markmap](https://markmap.js.org/)) are: (1) markdown files make it easy to achieve community-wide maintenance through Git version iterations, so everyone can add their knowledge; (2) markdown files have strong compatibility with large language models.
