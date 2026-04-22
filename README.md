@@ -10,7 +10,6 @@ This project has just started, and I will continue to update it.
 ## How to View the Mind Map
 This mind map is built using [Markmap](https://markmap.js.org/), a library that converts Markdown documents into interactive SVG mind maps.
 ### Option 1: Live Web View (GitHub Pages)
-Simply visit your GitHub Pages URL to interactively click, drag, and explore the mind map directly in your browser.
 ### Option 2: Local Viewing
 1. Clone or download this repository to your local machine.
 2. Open the `index.html` file directly in any modern web browser (Chrome, Firefox, Safari, Edge).
