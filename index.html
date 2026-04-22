@@ -1,66 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mind Map</title>
-  
-  <!-- Tailwind for some simple page styling if needed, but primarily relying on markmap -->
-  <style>
-    * { margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    #mindmap {
-      display: block;
-      width: 100vw;
-      height: 100vh;
-    }
-  </style>
-
-  <!-- Markmap dependencies -->
-  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
-  <script src="https://cdn.jsdelivr.net/npm/markmap-lib"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Markmap</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+#mindmap {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+.markmap-dark {
+  background: #27272a;
+  color: white;
+}
+</style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/style.css">
 </head>
 <body>
-
-  <!-- The SVG where the mind map will be drawn -->
-  <svg id="mindmap"></svg>
-
-  <script>
-    async function loadMindMap() {
-      try {
-        // 1. Fetch the raw markdown content. 
-        // Note: Change 'map.md' below to match your filename if it's different.
-        // It looks like your file is currently named 'map.md' in this directory.
-        const response = await fetch('./map.md');
-        if (!response.ok) {
-            throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
-        }
-        const markdownContent = await response.text();
-
-        // 2. Parse the markdown into a structure Markmap can use
-        const { markmap } = window;
-        const { Markmap, loadCSS, loadJS } = markmap;
-        const transformer = new markmap.Transformer();
-        const { root, features } = transformer.transform(markdownContent);
-        const { styles, scripts } = transformer.getUsedAssets(features);
-        
-        // 3. Load necessary Markmap assets dynamically
-        if (styles) loadCSS(styles);
-        if (scripts) loadJS(scripts, { getMarkmap: () => markmap });
-
-        // 4. Render the mind map inside the SVG
-        Markmap.create('#mindmap', null, root);
-        
-      } catch (error) {
-        console.error("Error loading mind map:", error);
-        document.body.innerHTML = `<div style="padding: 2rem; color: red;"><h2>Error loading mind map</h2><p>${error.message}</p></div>`;
-      }
-    }
-
-    // Call the function on load
-    loadMindMap();
-  </script>
-
+<svg id="mindmap"></svg>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-view@0.18.12/dist/browser/index.js"></script><script src="https://cdn.jsdelivr.net/npm/markmap-toolbar@0.18.12/dist/index.js"></script><script>(r => {
+              setTimeout(r);
+            })(function renderToolbar() {
+  const {
+    markmap,
+    mm
+  } = window;
+  const {
+    el
+  } = markmap.Toolbar.create(mm);
+  el.setAttribute('style', 'position:absolute;bottom:20px;right:20px');
+  document.body.append(el);
+})</script><script>((getMarkmap, getOptions, root2, jsonOptions) => {
+              const markmap = getMarkmap();
+              window.mm = markmap.Markmap.create(
+                "svg#mindmap",
+                (getOptions || markmap.deriveOptions)(jsonOptions),
+                root2
+              );
+              if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("markmap-dark");
+              }
+            })(() => window.markmap,null,{"content":"Species Distribution Model","children":[{"content":"<strong>1. Species occurrence data</strong>","children":[{"content":"Presence-Only data","children":[],"payload":{"tag":"li","lines":"7,8"}},{"content":"Presence-Absence data","children":[],"payload":{"tag":"li","lines":"8,10"}}],"payload":{"tag":"h2","lines":"6,7"}},{"content":"<strong>2. Pseudo-Absence (background) data</strong>","children":[{"content":"Range","children":[{"content":"Principle: <em>...represent all environments in the region of interest</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"12,13"}},{"content":"<em>Allowing that a presence and a background sample may occur at the same site</em> (Renner et al., 2015).","children":[],"payload":{"tag":"li","lines":"13,14"}}],"payload":{"tag":"h3","lines":"11,12"}},{"content":"Amount","children":[{"content":"Principle: <em>The number of background points should be large enough to comprehensively sample (and hence represent) all environments in the region of interest</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"15,16"}},{"content":"Rule of thumb: 50000 (Valavi et. al., 2022)","children":[],"payload":{"tag":"li","lines":"16,17"}}],"payload":{"tag":"h3","lines":"14,15"}},{"content":"Weighting pseudo-absence data","children":[],"payload":{"tag":"h3","lines":"17,18"}}],"payload":{"tag":"h2","lines":"10,11"}},{"content":"<strong>3. Environment data (predictors)</strong>","children":[{"content":"How to select","children":[{"content":"Re-processing: manually removing highly correlated predictors before modeling (agnostic for regression-based models)","children":[{"content":"1. pair Pearson correlation (remove predictors &gt; 0.8) (Valavi et. al., 2022)","children":[],"payload":{"tag":"li","lines":"22,23","listIndex":1}},{"content":"2. VIF","children":[],"payload":{"tag":"li","lines":"23,24","listIndex":2}}],"payload":{"tag":"li","lines":"21,24"}},{"content":"In-Model: using algorithms with built-in regularization (Lasso and ridge regression option in GLMs, MaxEnt/MaxNet, BRT/XGBoost, etc) for model fitting (introduce complexity penalty; performance-driven)","children":[],"payload":{"tag":"li","lines":"24,25"}}],"payload":{"tag":"h3","lines":"20,21"}},{"content":"Processing","children":[{"content":"Standardization","children":[],"payload":{"tag":"li","lines":"26,27"}}],"payload":{"tag":"h3","lines":"25,26"}},{"content":"<em>a map with smooth variation in prediction could be a sign of a simpler model</em> (Merow et al. 2014).","children":[],"payload":{"tag":"h3","lines":"27,28"}}],"payload":{"tag":"h2","lines":"19,20"}},{"content":"<strong>4. Model fitting</strong>","children":[{"content":"Algorithm","children":[{"content":"Regression-based model","children":[{"content":"<em>Work well when the number of presence data is low (&lt;30)</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"33,34"}},{"content":"Generalized Linear Models (GLMs)","children":[{"content":"Using parametric functions such as linear or higher-degree polynomials to model the relationship between the response and predictors.","children":[],"payload":{"tag":"li","lines":"35,36"}}],"payload":{"tag":"li","lines":"34,36"}},{"content":"Generalized Additive Models (GAMs)","children":[{"content":"Using nonparametric smooth functions to allow nonlinearity.","children":[],"payload":{"tag":"li","lines":"37,38"}}],"payload":{"tag":"li","lines":"36,38"}},{"content":"Multivariate Adaptive Regression Splines (MARS)","children":[{"content":"Auto-tuning complexity based on sample number; allow interaction term.","children":[],"payload":{"tag":"li","lines":"39,40"}}],"payload":{"tag":"li","lines":"38,40"}},{"content":"MaxEnt","children":[{"content":"<em>Complexity is controlled by use of transformed features of the predictor covariates (including linear, quadratic, product, hinge, and threshold) and also by choice of regularization settings</em> (Elith et al. 2011). Using L1 regularization.","children":[],"payload":{"tag":"li","lines":"41,42"}}],"payload":{"tag":"li","lines":"40,42"}},{"content":"MaxNet","children":[],"payload":{"tag":"li","lines":"42,43"}}],"payload":{"tag":"li","lines":"32,43"}},{"content":"Tree-based model:","children":[{"content":"<em>Classification and regression trees are nonlinear (and nonparametric) models that recursively partition (&#x201c;split&#x201d;) the predictor space into sections with similar values of the response variable</em> (Elith et al., 2019).","children":[],"payload":{"tag":"li","lines":"44,45"}},{"content":"<em>Often highly effective for prediction</em> (Hastie et al. 2009).","children":[],"payload":{"tag":"li","lines":"45,46"}},{"content":"<em>Valavi et al., 2022 provided tuned model based on the presence-background training data.</em>","children":[],"payload":{"tag":"li","lines":"46,47"}},{"content":"Boosted Regression Trees (BRT)","children":[],"payload":{"tag":"li","lines":"47,48"}},{"content":"XGBoost","children":[],"payload":{"tag":"li","lines":"48,49"}},{"content":"Random Forests (RF)","children":[{"content":"<em>Not very sensitive to tuning the model parameters</em> (Strobl et al. 2009, Freeman et al. 2016).","children":[],"payload":{"tag":"li","lines":"50,51"}}],"payload":{"tag":"li","lines":"49,51"}},{"content":"Conditional Inference Forest (cforest)","children":[],"payload":{"tag":"li","lines":"51,52"}}],"payload":{"tag":"li","lines":"43,52"}},{"content":"Envelop models","children":[],"payload":{"tag":"li","lines":"52,53"}},{"content":"Other models","children":[{"content":"Support Vector Machine (SVM)","children":[],"payload":{"tag":"li","lines":"54,55"}},{"content":"biomod","children":[{"content":"Including ten fixed algorithms and combine them.","children":[],"payload":{"tag":"li","lines":"56,57"}}],"payload":{"tag":"li","lines":"55,57"}},{"content":"Custom ensemble","children":[{"content":"<em>Working better than biomod.</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"58,59"}},{"content":"<em>Given evidence in the tree ensemble literature that ensembles work best when the component models are not highly correlated (Elith 2019)... We targeted methods we expected (based on our experience) to do well. The chosen models were Lasso, GAM, MaxEnt, BRT, and one of the RF variants (down-sampled)... Their predictions were all rescaled between 0 and 1 and their (unweighted) average used to build the ensemble model.</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"59,60"}}],"payload":{"tag":"li","lines":"57,60"}}],"payload":{"tag":"li","lines":"53,60"}}],"payload":{"tag":"h3","lines":"31,32"}},{"content":"Calibrating","children":[{"content":"<em>predictions based on presence-only species data are not expected to be well calibrated</em> (Valavi et al., 2022).","children":[],"payload":{"tag":"li","lines":"62,63"}}],"payload":{"tag":"h3","lines":"61,62"}},{"content":"Parameter tuning (for parameter and semi-parameter models)","children":[],"payload":{"tag":"h3","lines":"63,64"}},{"content":"Ensembling models","children":[],"payload":{"tag":"h3","lines":"64,65"}}],"payload":{"tag":"h2","lines":"30,31"}},{"content":"<strong>5. Model prediction</strong>","children":[],"payload":{"tag":"h2","lines":"68,69"}},{"content":"<strong>6. Model evaluation</strong>","children":[{"content":"Indices","children":[{"content":"<em>Different index when different application.</em>","children":[],"payload":{"tag":"li","lines":"72,73"}},{"content":"Evaluating continuous output (suitability)","children":[{"content":"Metrics requiring absence records","children":[{"content":"AUC-ROC (Area under receiver operating characteristic curve)","children":[],"payload":{"tag":"li","lines":"75,76"}},{"content":"AUC-PR (Area under precision-recall curve)","children":[{"content":"<em>AUC-PR is often preferred to AUC-ROC where the number of negatives (absences) is much larger than positives</em> (presences; Flach and Kull 2015, Hughes-Oliver 2018).","children":[],"payload":{"tag":"li","lines":"77,78"}},{"content":"<em>Recent studies have recommended using AUCPR for evaluating SDMs for rare species, i.e., species with low prevalence</em> (Johnson et al. 2012 and Sofaer et al. 2019).","children":[],"payload":{"tag":"li","lines":"78,79"}}],"payload":{"tag":"li","lines":"76,79"}},{"content":"AUC-PRG (Area under precision-recall gain curve)","children":[],"payload":{"tag":"li","lines":"79,80"}},{"content":"COR (Pearson correlation between the predicted likelihood of presence and the presence&#x2013;absence testing data)","children":[],"payload":{"tag":"li","lines":"80,81"}}],"payload":{"tag":"li","lines":"74,81"}},{"content":"Metrics not requiring absence records","children":[{"content":"Boyce index","children":[],"payload":{"tag":"li","lines":"82,83"}}],"payload":{"tag":"li","lines":"81,83"}}],"payload":{"tag":"li","lines":"73,83"}},{"content":"Evaluating binary output (presence/absence)","children":[{"content":"TSS (True Skill Statistic)","children":[],"payload":{"tag":"li","lines":"84,85"}},{"content":"Kappa","children":[],"payload":{"tag":"li","lines":"85,87"}}],"payload":{"tag":"li","lines":"83,87"}}],"payload":{"tag":"h3","lines":"71,72"}}],"payload":{"tag":"h2","lines":"70,71"}},{"content":"<strong>7. References</strong>","children":[{"content":"<a href=\"https://doi.org/10.1002/ecm.1486\">Valavi et al., 2022</a>","children":[],"payload":{"tag":"li","lines":"88,89"}}],"payload":{"tag":"h2","lines":"87,88"}}]},{"colorFreezeLevel":2})</script>
 </body>
 </html>
