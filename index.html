@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mind Map</title>
+  
+  <!-- Tailwind for some simple page styling if needed, but primarily relying on markmap -->
+  <style>
+    * { margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    #mindmap {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+
+  <!-- Markmap dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-lib"></script>
+</head>
+<body>
+
+  <!-- The SVG where the mind map will be drawn -->
+  <svg id="mindmap"></svg>
+
+  <script>
+    async function loadMindMap() {
+      try {
+        // 1. Fetch the raw markdown content. 
+        // Note: Change 'map.md' below to match your filename if it's different.
+        // It looks like your file is currently named 'map.md' in this directory.
+        const response = await fetch('./map.md');
+        if (!response.ok) {
+            throw new Error(`Failed to load file: ${response.status} ${response.statusText}`);
+        }
+        const markdownContent = await response.text();
+
+        // 2. Parse the markdown into a structure Markmap can use
+        const { markmap } = window;
+        const { Markmap, loadCSS, loadJS } = markmap;
+        const transformer = new markmap.Transformer();
+        const { root, features } = transformer.transform(markdownContent);
+        const { styles, scripts } = transformer.getUsedAssets(features);
+        
+        // 3. Load necessary Markmap assets dynamically
+        if (styles) loadCSS(styles);
+        if (scripts) loadJS(scripts, { getMarkmap: () => markmap });
+
+        // 4. Render the mind map inside the SVG
+        Markmap.create('#mindmap', null, root);
+        
+      } catch (error) {
+        console.error("Error loading mind map:", error);
+        document.body.innerHTML = `<div style="padding: 2rem; color: red;"><h2>Error loading mind map</h2><p>${error.message}</p></div>`;
+      }
+    }
+
+    // Call the function on load
+    loadMindMap();
+  </script>
+
+</body>
+</html>
